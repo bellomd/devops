@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:13.0-alpine
+    container_name: cureyoo-postgres
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "postgres", "-U", "root"]
+      timeout: 45s
+      interval: 10s
+      retries: 5
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - /Users/bellomuhammad/com.docker.docker/postgres/cureyoo.data:/var/lib/postgresql/data:rw
+      #- /Volumes/BelloExtSSD480GB/bellomuhammad/com.docker.docker/postgres/cureyoo.data:/var/lib/postgresql/data:rw
+
+  # redis:
+  #   image: redis:alpine
+  #   container_name: cureyoo-redis
+  #   volumes:
+  #     - /Volumes/BelloExtSSD480GB/bellomuhammad/com.docker.docker/redis/cureyoo.data:/data
+        #- /Users/bellomuhammad/com.docker.docker/redis/cureyoo.data:/data
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
+    container_name: cureyoo-elasticsearch
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+    volumes:
+      - /Users/bellomuhammad/com.docker.docker/elasticsearch/cureyoo.data:/usr/share/elasticsearch/data
+      #- /Volumes/BelloExtSSD480GB/bellomuhammad/com.docker.docker/elasticsearch/cureyoo.data:/usr/share/elasticsearch/data
